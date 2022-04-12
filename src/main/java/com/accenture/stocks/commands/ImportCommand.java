@@ -2,63 +2,70 @@ package com.accenture.stocks.commands;
 
 import com.accenture.stocks.cliscanner.FromCSVFormatting;
 import com.accenture.stocks.entities.Stock;
+import com.accenture.stocks.persistence.DbOperations;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+
+import java.io.*;
+import java.sql.*;
 import java.util.Scanner;
 
 public class ImportCommand extends Command {
+    private final boolean value = false;
     private final String name = "import";
-    private final Boolean value = false;
-    private ArrayList<Stock> stocks;
-    private Scanner scanner;
     private final String relativePath = "data\\";
     private final String defaultFile = "STOCK_DATA.csv";
 
-    public ImportCommand(ArrayList<Stock> stocks, Scanner scanner) {
-        this.stocks = stocks;
-        this.scanner = scanner;
+    private Scanner scanner;
+    private Connection connection;
+    private DbOperations dbOperations;
 
+
+    public ImportCommand(Scanner scanner, DbOperations dbOperations){
+        this.scanner = scanner;
+        this.dbOperations = dbOperations;
     }
 
+
+
     @Override
-    public boolean execute() {
+    public boolean execute(){
         System.out.println("Which file do you want to import? [d for default or type filename.csv]");
         String input = scanner.nextLine();
         if (input.equals("d")) {
-            this.stocks = readStocksFromCsv(relativePath + defaultFile);
+            insertStocksInDBFromCSV(relativePath + defaultFile);
         } else {
-            this.stocks = readStocksFromCsv(relativePath + input);
+            insertStocksInDBFromCSV(relativePath + input);
         }
-        for (Stock stock : this.stocks) {
+      /*  for (Stock stock : this.stocks) {
             System.out.println(stock.toString());
-        }
+        }*/
         return value;
     }
 
-    public ArrayList<Stock> readStocksFromCsv(String fileName) {
-        ArrayList<Stock> stocks = new ArrayList<>();
+    private void insertStocksInDBFromCSV(String fileName) {
+        FromCSVFormatting csvFormatting = new FromCSVFormatting();
+
         try (FileReader fileReader = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(fileReader);
             br.readLine(); //TODO controlla che la stringa iniziale sia corretta o if o eccezione personalizzata
             String line = br.readLine();
+            System.out.println("Importing stocks into database...");
             while (line != null) {
                 String[] attributes = line.split(";");
-                FromCSVFormatting csvFormatting = new FromCSVFormatting();
-                Stock stock = new Stock(attributes[0],
-                csvFormatting.getFormattedPrice(attributes[1]),csvFormatting.getFormattedLocalDate(attributes[2]),attributes[3]);
-                stocks.add(stock);
+                Stock stock = new Stock(attributes[0], csvFormatting.getFormattedPrice(attributes[1]),
+                        csvFormatting.getFormattedLocalDate(attributes[2]),attributes[3]);
+                dbOperations.importStockInDB(stock);
                 line = br.readLine();
             }
+            System.out.println("Stocks successfully imported in Database");
         } catch (FileNotFoundException fileNotFoundException) {
             System.out.println("Typo in the file name or check if file exists in data/ folder");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return stocks;
+
     }
 
     @Override
