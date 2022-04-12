@@ -4,10 +4,10 @@ import com.accenture.stocks.entities.Stock;
 
 import java.sql.*;
 
-public class DbOperations {
+public class DBOperations {
     private Connection connection;
 
-    public DbOperations(Connection connection) {
+    public DBOperations(Connection connection) {
 
         this.connection = connection;
     }
@@ -28,7 +28,6 @@ public class DbOperations {
 
     private PreparedStatement executeStringInsert( String field, String query ) throws SQLException {
         PreparedStatement preparedStatement = this.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
         preparedStatement.setString(1, field);
         preparedStatement.executeUpdate();
         return preparedStatement;
@@ -100,6 +99,15 @@ public class DbOperations {
         PreparedStatement preparedStatementSetAutoincrementToZero = this.connection.prepareStatement("ALTER TABLE " + tableName + " AUTO_INCREMENT=0");
         preparedStatementSetAutoincrementToZero.executeUpdate();
     }
+
+    public ResultSet executeSelectLikeStartsWith(String tableName, String columnName, String input) throws SQLException {
+
+        PreparedStatement preparedStatementLike = this.connection.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + " LIKE ? ESCAPE '['");
+        preparedStatementLike.setString(1, input + "%");
+        ResultSet resultSet= preparedStatementLike.executeQuery();
+        return resultSet;
+    }
+
 }
 
 

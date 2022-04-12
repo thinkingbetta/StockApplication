@@ -1,6 +1,6 @@
 package com.accenture.stocks.old;
 
-import com.accenture.stocks.cliscanner.FromCSVFormatting;
+import com.accenture.stocks.formatters.FromCSVFormatting;
 import com.accenture.stocks.entities.Stock;
 
 import java.io.BufferedReader;

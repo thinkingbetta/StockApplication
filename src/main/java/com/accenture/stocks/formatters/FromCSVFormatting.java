@@ -1,4 +1,4 @@
-package com.accenture.stocks.cliscanner;
+package com.accenture.stocks.formatters;
 
 
 import java.math.BigDecimal;

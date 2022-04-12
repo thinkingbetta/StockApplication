@@ -1,14 +1,11 @@
 package com.accenture.stocks;
 
 
-import com.accenture.stocks.cliscanner.ScannerFormatting;
-import com.accenture.stocks.commands.Command;
-import com.accenture.stocks.commands.DeleteCommand;
-import com.accenture.stocks.commands.ExitCommand;
-import com.accenture.stocks.commands.ImportCommand;
+import com.accenture.stocks.commands.*;
+import com.accenture.stocks.formatters.ScannerFormatting;
 import com.accenture.stocks.entities.Stock;
 import com.accenture.stocks.persistence.DatabaseConnector;
-import com.accenture.stocks.persistence.DbOperations;
+import com.accenture.stocks.persistence.DBOperations;
 
 
 import java.sql.Connection;
@@ -32,7 +29,7 @@ public class StockApp {
         }
 
         ArrayList<Stock> stocks = new ArrayList<>();
-        DbOperations dbOperations = new DbOperations(connection);
+        DBOperations dbOperations = new DBOperations(connection);
 
         Scanner scanner = new Scanner(System.in);
         ScannerFormatting scannerFormatting = new ScannerFormatting(scanner);
@@ -40,11 +37,13 @@ public class StockApp {
         Command exit = new ExitCommand();
         Command importInDatabaseCommand = new ImportCommand(scanner,dbOperations);
         Command deleteCommand = new DeleteCommand(connection, scanner, dbOperations);
+        Command searchCommand = new SearchCommand(connection,scanner, dbOperations);
 
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(exit);
         commands.add(importInDatabaseCommand);
         commands.add(deleteCommand);
+        commands.add(searchCommand);
 
 
 
@@ -54,7 +53,7 @@ public class StockApp {
             for (Command command : commands) {
                 System.out.println(command.getName());
             }
-            String input = scannerFormatting.getFormattedCommand();
+            String input = scannerFormatting.getFormattedString();
 
             for (Command command : commands) {
                 if (command.getName().equals(input)) {

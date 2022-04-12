@@ -1,7 +1,7 @@
 package com.accenture.stocks.commands;
 
-import com.accenture.stocks.cliscanner.ScannerFormatting;
-import com.accenture.stocks.persistence.DbOperations;
+import com.accenture.stocks.formatters.ScannerFormatting;
+import com.accenture.stocks.persistence.DBOperations;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,9 +14,9 @@ public class DeleteCommand extends Command {
     private final String[] tables = {"company_pricedate", "company_industry", "industry", "company", "pricedate"};
     private final Connection connection;
     private Scanner scanner;
-    private DbOperations dbOperations;
+    private DBOperations dbOperations;
 
-    public DeleteCommand(Connection connection, Scanner scanner, DbOperations dbOperations) {
+    public DeleteCommand(Connection connection, Scanner scanner, DBOperations dbOperations) {
         this.connection = connection;
         this.scanner = scanner;
         this.dbOperations = dbOperations;
@@ -25,7 +25,7 @@ public class DeleteCommand extends Command {
     @Override
     public boolean execute() {
         System.out.println("Do you want to delete all data from database? [true or false]");
-        Boolean input = Boolean.valueOf(new ScannerFormatting(this.scanner).getFormattedCommand());
+        Boolean input = Boolean.valueOf(new ScannerFormatting(this.scanner).getFormattedString());
         //if the user insert true, then every table will be deleted and the autoincrement will be set to zero.
         if (input.equals(deleteValue)) {
             for (String t : tables) {

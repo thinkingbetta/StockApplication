@@ -1,8 +1,8 @@
 package com.accenture.stocks.commands;
 
-import com.accenture.stocks.cliscanner.FromCSVFormatting;
+import com.accenture.stocks.formatters.FromCSVFormatting;
 import com.accenture.stocks.entities.Stock;
-import com.accenture.stocks.persistence.DbOperations;
+import com.accenture.stocks.persistence.DBOperations;
 
 
 import java.io.*;
@@ -17,10 +17,10 @@ public class ImportCommand extends Command {
 
     private Scanner scanner;
     private Connection connection;
-    private DbOperations dbOperations;
+    private DBOperations dbOperations;
 
 
-    public ImportCommand(Scanner scanner, DbOperations dbOperations){
+    public ImportCommand(Scanner scanner, DBOperations dbOperations){
         this.scanner = scanner;
         this.dbOperations = dbOperations;
     }
