@@ -97,7 +97,7 @@ public class DbOperations {
     }
 
     public void autoincrementToZero(String tableName) throws SQLException {
-        PreparedStatement preparedStatementSetAutoincrementToZero = this.connection.prepareStatement("ALTER TABLE" + tableName + "AUTO_INCREMENT=0");
+        PreparedStatement preparedStatementSetAutoincrementToZero = this.connection.prepareStatement("ALTER TABLE " + tableName + " AUTO_INCREMENT=0");
         preparedStatementSetAutoincrementToZero.executeUpdate();
     }
 }
