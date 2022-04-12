@@ -1,7 +1,7 @@
 package com.accenture.stocks.commands;
 
+import com.accenture.stocks.cliscanner.FromCSVFormatting;
 import com.accenture.stocks.entities.Stock;
-import com.accenture.stocks.services.StockService;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -15,14 +15,13 @@ public class ImportCommand extends Command {
     private final Boolean value = false;
     private ArrayList<Stock> stocks;
     private Scanner scanner;
-    private StockService stockService;
     private final String relativePath = "data\\";
     private final String defaultFile = "STOCK_DATA.csv";
 
-    public ImportCommand(ArrayList<Stock> stocks, Scanner scanner, StockService stockService) {
+    public ImportCommand(ArrayList<Stock> stocks, Scanner scanner) {
         this.stocks = stocks;
         this.scanner = scanner;
-        this.stockService = stockService;
+
     }
 
     @Override
@@ -48,7 +47,9 @@ public class ImportCommand extends Command {
             String line = br.readLine();
             while (line != null) {
                 String[] attributes = line.split(";");
-                Stock stock = this.stockService.createStock(attributes);
+                FromCSVFormatting csvFormatting = new FromCSVFormatting();
+                Stock stock = new Stock(attributes[0],
+                csvFormatting.getFormattedPrice(attributes[1]),csvFormatting.getFormattedLocalDate(attributes[2]),attributes[3]);
                 stocks.add(stock);
                 line = br.readLine();
             }

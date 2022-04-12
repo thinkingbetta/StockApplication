@@ -1,25 +1,28 @@
 package com.accenture.stocks.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Stock {
+public class  Stock {
     private String companyName;
-    private Float price;
+    private BigDecimal price;
     private LocalDate date;
     private String industryName;
 
-    public Stock(String companyName, Float price, LocalDate date, String industryName) {
+    public Stock(String companyName, BigDecimal price, LocalDate date, String industryName) {
         this.companyName = companyName;
         this.price = price;
         this.date = date;
         this.industryName = industryName;
     }
 
+
+
     public String getCompanyName(){
         return companyName;
     }
 
-    public Float getPrice(){
+    public BigDecimal getPrice(){
         return price;
     }
 

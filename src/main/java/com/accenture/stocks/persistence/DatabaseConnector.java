@@ -12,7 +12,7 @@ public class DatabaseConnector {
         properties.put("user", "root");
         properties.put("password", "secret");
 
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/salsasyntax", properties);
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stockapp", properties);
 
         System.out.println("You are successfully connected to the database.");
         return conn;

@@ -5,9 +5,11 @@ import com.accenture.stocks.cliscanner.ScannerFormatting;
 import com.accenture.stocks.commands.Command;
 import com.accenture.stocks.commands.ExitCommand;
 import com.accenture.stocks.commands.ImportCommand;
+import com.accenture.stocks.commands.ImportInDatabaseCommand;
 import com.accenture.stocks.entities.Stock;
 import com.accenture.stocks.persistence.DatabaseConnector;
-import com.accenture.stocks.services.StockService;
+import com.accenture.stocks.persistence.DbOperations;
+
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -30,17 +32,19 @@ public class StockApp {
         }
 
         ArrayList<Stock> stocks = new ArrayList<>();
-        StockService stockService = new StockService();
+        DbOperations dbOperations = new DbOperations(connection);
 
         Scanner scanner = new Scanner(System.in);
         ScannerFormatting scannerFormatting = new ScannerFormatting(scanner);
 
         Command exit = new ExitCommand();
-        Command importCommand = new ImportCommand(stocks, scanner,stockService);
+        Command importCommand = new ImportCommand(stocks, scanner);
+        Command importInDatabaseCommand = new ImportInDatabaseCommand(connection,dbOperations);
 
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(exit);
         commands.add(importCommand);
+        commands.add(importInDatabaseCommand);
 
 
 
