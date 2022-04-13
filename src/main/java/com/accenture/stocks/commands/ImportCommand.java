@@ -49,15 +49,17 @@ public class ImportCommand extends Command {
             BufferedReader br = new BufferedReader(fileReader);
             br.readLine(); //TODO controlla che la stringa iniziale sia corretta o if o eccezione personalizzata
             String line = br.readLine();
+            int count = 0;
             System.out.println("Importing stocks into database...");
             while (line != null) {
                 String[] attributes = line.split(";");
                 Stock stock = new Stock(attributes[0], csvFormatting.getFormattedPrice(attributes[1]),
                         csvFormatting.getFormattedLocalDate(attributes[2]),attributes[3]);
                 dbOperations.importStockInDB(stock);
+                count++;
                 line = br.readLine();
             }
-            System.out.println("Stocks successfully imported in Database");
+            System.out.println(count + " stocks successfully imported into database");
         } catch (FileNotFoundException fileNotFoundException) {
             System.out.println("Typo in the file name or check if file exists in data/ folder");
         } catch (IOException e) {

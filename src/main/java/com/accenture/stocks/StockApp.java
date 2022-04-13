@@ -38,12 +38,14 @@ public class StockApp {
         Command importInDatabaseCommand = new ImportCommand(scanner,dbOperations);
         Command deleteCommand = new DeleteCommand(connection, scanner, dbOperations);
         Command searchCommand = new SearchCommand(connection,scanner, dbOperations);
+        Command showID = new ShowCommmand(connection, scanner,dbOperations);
 
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(exit);
         commands.add(importInDatabaseCommand);
         commands.add(deleteCommand);
         commands.add(searchCommand);
+        commands.add(showID);
 
 
 

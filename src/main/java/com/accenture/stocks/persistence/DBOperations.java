@@ -108,6 +108,26 @@ public class DBOperations {
         return resultSet;
     }
 
+    public ResultSet getTenLastStocksByCompanyId(int input) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("select distinct c.id, c.company_name, p.euro_price, p.date, i.industry_name\n" +
+                "from company c\n" +
+                "left join company_pricedate d\n" +
+                "on c.id = d.company_id\n" +
+                "left join pricedate p\n" +
+                "on d.pricedate_id = p.id\n" +
+                "left join company_industry b  \n" +
+                "on c.id = b.stock_id\n" +
+                "left join industry i\n" +
+                "on i.id = b.industry_id\n" +
+                "where c.id = ?\n" +
+                "order by date desc limit 10;");
+
+
+        preparedStatement.setInt(1, input);
+        ResultSet resultSet= preparedStatement.executeQuery();
+        return resultSet;
+    }
+
 }
 
 

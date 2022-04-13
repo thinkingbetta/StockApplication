@@ -37,7 +37,7 @@ public class SearchCommand extends Command {
                 int id = resultSet.getInt(1);
                 String companyName = resultSet.getString(2);
                 count ++;
-                System.out.println("==========ID:" + id + "==========" + "\n\t"  + companyName +  "\n==========================\n");
+                System.out.println("==============ID:" + id + "==============" + "\n\t"  + companyName +  "\n==================================\n");
                 hasNext= resultSet.next();
             }
             System.out.println( count + " companies found.");
