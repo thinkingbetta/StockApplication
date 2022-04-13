@@ -1,6 +1,6 @@
 package com.accenture.stocks.commands;
 
-import com.accenture.stocks.formatters.FromCSVFormatting;
+import com.accenture.stocks.formatters.FromCSVFormatter;
 import com.accenture.stocks.entities.Stock;
 import com.accenture.stocks.persistence.DBOperations;
 
@@ -43,7 +43,7 @@ public class ImportCommand extends Command {
     }
 
     private void insertStocksInDBFromCSV(String fileName) {
-        FromCSVFormatting csvFormatting = new FromCSVFormatting();
+        FromCSVFormatter csvFormatting = new FromCSVFormatter();
 
         try (FileReader fileReader = new FileReader(fileName)) {
             BufferedReader br = new BufferedReader(fileReader);

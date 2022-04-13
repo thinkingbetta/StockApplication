@@ -4,7 +4,7 @@ package com.accenture.stocks.formatters;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class FromCSVFormatting {
+public class FromCSVFormatter {
 
 
     public BigDecimal getFormattedPrice(String metadata) {

@@ -1,6 +1,6 @@
 package com.accenture.stocks.old;
 
-import com.accenture.stocks.formatters.FromCSVFormatting;
+import com.accenture.stocks.formatters.FromCSVFormatter;
 import com.accenture.stocks.entities.Stock;
 
 import java.io.BufferedReader;
@@ -47,7 +47,7 @@ public class OLDImport {
             String line = br.readLine();
             while (line != null) {
                 String[] attributes = line.split(";");
-                FromCSVFormatting csvFormatting = new FromCSVFormatting();
+                FromCSVFormatter csvFormatting = new FromCSVFormatter();
                 Stock stock = new Stock(attributes[0],
                 csvFormatting.getFormattedPrice(attributes[1]),csvFormatting.getFormattedLocalDate(attributes[2]),attributes[3]);
                 stocks.add(stock);

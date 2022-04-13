@@ -1,14 +1,13 @@
 package com.accenture.stocks.formatters;
 
-import java.util.Locale;
 import java.util.Scanner;
 
-public class ScannerFormatting {
+public class ScannerFormatter {
     private Scanner scanner;
     private String[] fobiddenChars = {"[","%","_"}; //the order is IMPORTANT, square bracket has priority
 
 
-    public ScannerFormatting(Scanner scanner) {
+    public ScannerFormatter(Scanner scanner) {
         this.scanner=scanner;
     }
 

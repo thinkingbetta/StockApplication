@@ -2,7 +2,7 @@ package com.accenture.stocks;
 
 
 import com.accenture.stocks.commands.*;
-import com.accenture.stocks.formatters.ScannerFormatting;
+import com.accenture.stocks.formatters.ScannerFormatter;
 import com.accenture.stocks.entities.Stock;
 import com.accenture.stocks.persistence.DatabaseConnector;
 import com.accenture.stocks.persistence.DBOperations;
@@ -32,20 +32,22 @@ public class StockApp {
         DBOperations dbOperations = new DBOperations(connection);
 
         Scanner scanner = new Scanner(System.in);
-        ScannerFormatting scannerFormatting = new ScannerFormatting(scanner);
+        ScannerFormatter scannerFormatting = new ScannerFormatter(scanner);
 
         Command exit = new ExitCommand();
         Command importInDatabaseCommand = new ImportCommand(scanner,dbOperations);
-        Command deleteCommand = new DeleteCommand(connection, scanner, dbOperations);
-        Command searchCommand = new SearchCommand(connection,scanner, dbOperations);
-        Command showID = new ShowCommmand(connection, scanner,dbOperations);
+        Command deleteCommand = new DeleteCommand(scanner, dbOperations);
+        Command searchCommand = new SearchCommand(scanner, dbOperations);
+        Command showCommand = new ShowCommmand(scanner,dbOperations);
+        AddCommand addCommand = new AddCommand(scanner, dbOperations);
 
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(exit);
         commands.add(importInDatabaseCommand);
         commands.add(deleteCommand);
         commands.add(searchCommand);
-        commands.add(showID);
+        commands.add(showCommand);
+        commands.add(addCommand);
 
 
 

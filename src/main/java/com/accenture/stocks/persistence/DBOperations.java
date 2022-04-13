@@ -19,9 +19,24 @@ public class DBOperations {
         return generatedKey;
     }
 
-    private ResultSet executeSelect(String field, String query) throws SQLException {
+    public ResultSet executeOneStringSelect(String field, String query) throws SQLException {
         PreparedStatement id = this.connection.prepareStatement(query);
         id.setString(1,field);
+        ResultSet resultSet= id.executeQuery();
+        return resultSet;
+    }
+
+    public ResultSet executeOneIntSelect(int field, String query) throws SQLException {
+        PreparedStatement id = this.connection.prepareStatement(query);
+        id.setInt(1,field);
+        ResultSet resultSet= id.executeQuery();
+        return resultSet;
+    }
+
+    private ResultSet executeTwoIntSelect(int field1, int field2, String query) throws SQLException {
+        PreparedStatement id = this.connection.prepareStatement(query);
+        id.setInt(1,field1);
+        id.setInt(2,field2);
         ResultSet resultSet= id.executeQuery();
         return resultSet;
     }
@@ -40,16 +55,18 @@ public class DBOperations {
         preparedStatement.executeUpdate();
     }
 
-    public void importStockInDB(Stock stock) throws SQLException {
-        int companyId = insertCompanyInTable(stock);
-        int priceDateId = insertPriceDate(stock);
-        int industryId = insertIndustry(stock);
-        executeTwoIntInsert(companyId, priceDateId, "INSERT INTO company_pricedate (company_id,pricedate_id) VALUES (?,?)");
-        executeTwoIntInsert(companyId, industryId,"INSERT INTO company_industry (stock_id,industry_id) VALUES (?,?)");
+    public void deleteDataFromTable(String tableName) throws SQLException {
+        PreparedStatement preparedStatementDeleteFromCompany = this.connection.prepareStatement("delete from " + tableName);
+        preparedStatementDeleteFromCompany.executeUpdate();
     }
 
-    public int insertCompanyInTable(Stock stock) throws SQLException {
-        ResultSet companyNameResult = executeSelect(stock.getCompanyName(),"SELECT id FROM company WHERE company_name = ?");
+    public void autoincrementToZero(String tableName) throws SQLException {
+        PreparedStatement preparedStatementSetAutoincrementToZero = this.connection.prepareStatement("ALTER TABLE " + tableName + " AUTO_INCREMENT=0");
+        preparedStatementSetAutoincrementToZero.executeUpdate();
+    }
+
+    public int insertCompanyInCompanyTable(Stock stock) throws SQLException {
+        ResultSet companyNameResult = executeOneStringSelect(stock.getCompanyName(),"SELECT id FROM company WHERE company_name = ?");
         boolean hasNext = companyNameResult.next();
         if (hasNext)  {
             int alreadyExistingKeyCompany = companyNameResult.getInt(1);
@@ -59,12 +76,12 @@ public class DBOperations {
 
             int generatedKeyCompany = getGeneratedKey(preparedStatementCompany);
 
-           return generatedKeyCompany;
+            return generatedKeyCompany;
         }
     }
 
-    public int insertIndustry(Stock stock) throws SQLException {
-        ResultSet industryNameResult = executeSelect(stock.getIndustryName(), "SELECT id FROM industry WHERE industry_name = ?");
+    public int insertIndustryInIndustryTable(Stock stock) throws SQLException {
+        ResultSet industryNameResult = executeOneStringSelect(stock.getIndustryName(), "SELECT id FROM industry WHERE industry_name = ?");
         boolean hasNext = industryNameResult.next();
         if (hasNext) {
             int alreadyExistingKeyIndustry = industryNameResult.getInt(1);
@@ -76,8 +93,7 @@ public class DBOperations {
         }
     }
 
-    //TODO ha senso anche su questa tabella verificare che non esista gia' una copia dei dati che si stanno andando a raggiungere?
-    public int insertPriceDate(Stock stock) throws SQLException{
+    public int insertPriceDateInPricedateTable(Stock stock) throws SQLException{
         PreparedStatement preparedStatementPriceDate = this.connection.prepareStatement("INSERT INTO pricedate (euro_price," +
                 " date)  VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
 
@@ -90,16 +106,6 @@ public class DBOperations {
         return generatedKeyPriceDate;
     }
 
-    public void deleteDataFromTable(String tableName) throws SQLException {
-        PreparedStatement preparedStatementDeleteFromCompany = this.connection.prepareStatement("delete from " + tableName);
-        preparedStatementDeleteFromCompany.executeUpdate();
-    }
-
-    public void autoincrementToZero(String tableName) throws SQLException {
-        PreparedStatement preparedStatementSetAutoincrementToZero = this.connection.prepareStatement("ALTER TABLE " + tableName + " AUTO_INCREMENT=0");
-        preparedStatementSetAutoincrementToZero.executeUpdate();
-    }
-
     public ResultSet executeSelectLikeStartsWith(String tableName, String columnName, String input) throws SQLException {
 
         PreparedStatement preparedStatementLike = this.connection.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + " LIKE ? ESCAPE '['");
@@ -108,8 +114,21 @@ public class DBOperations {
         return resultSet;
     }
 
-    public ResultSet getTenLastStocksByCompanyId(int input) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("select distinct c.id, c.company_name, p.euro_price, p.date, i.industry_name\n" +
+    public void importStockInDB(Stock stock) throws SQLException {
+        int companyId = insertCompanyInCompanyTable(stock);
+        int priceDateId = insertPriceDateInPricedateTable(stock);
+        int industryId = insertIndustryInIndustryTable(stock);
+        executeTwoIntInsert(companyId, priceDateId, "INSERT INTO company_pricedate (company_id,pricedate_id) VALUES (?,?)");
+
+        ResultSet companyIndustryIdResult = executeTwoIntSelect(companyId,industryId,"SELECT id FROM company_industry WHERE stock_id = ? AND industry_id = ?");
+        boolean hasNext = companyIndustryIdResult.next();
+        if(!hasNext) {
+            executeTwoIntInsert(companyId, industryId, "INSERT INTO company_industry (stock_id, industry_id) VALUES (?,?)");
+        }
+    }
+
+    public ResultSet selectTenLastStocksByCompanyId(int input) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("select c.id, c.company_name, p.euro_price, p.date, i.industry_name\n" +
                 "from company c\n" +
                 "left join company_pricedate d\n" +
                 "on c.id = d.company_id\n" +
@@ -121,7 +140,6 @@ public class DBOperations {
                 "on i.id = b.industry_id\n" +
                 "where c.id = ?\n" +
                 "order by date desc limit 10;");
-
 
         preparedStatement.setInt(1, input);
         ResultSet resultSet= preparedStatement.executeQuery();

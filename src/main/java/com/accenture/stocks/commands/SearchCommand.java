@@ -1,6 +1,6 @@
 package com.accenture.stocks.commands;
 
-import com.accenture.stocks.formatters.ScannerFormatting;
+import com.accenture.stocks.formatters.ScannerFormatter;
 import com.accenture.stocks.persistence.DBOperations;
 
 import java.sql.Connection;
@@ -13,12 +13,10 @@ public class SearchCommand extends Command {
     private final String name = "search";
     private final String tableName = "company";
     private final String columnName = "company_name";
-    private Connection connection;
     private Scanner scanner;
     private DBOperations dbOperations;
 
-    public SearchCommand(Connection connection, Scanner scanner, DBOperations dbOperations) {
-        this.connection = connection;
+    public SearchCommand(Scanner scanner, DBOperations dbOperations) {
         this.scanner = scanner;
         this.dbOperations = dbOperations;
     }
@@ -27,7 +25,7 @@ public class SearchCommand extends Command {
     @Override
     public boolean execute() {
         System.out.println("Type first characters of a company to find its ID [example ac]");
-        String input = new ScannerFormatting(scanner).getFormattedSqlLikeString();
+        String input = new ScannerFormatter(scanner).getFormattedSqlLikeString();
 
         try {
             ResultSet resultSet = this.dbOperations.executeSelectLikeStartsWith(tableName, columnName, input);
