@@ -146,6 +146,42 @@ public class DBOperations {
         return resultSet;
     }
 
+    public ResultSet getMaxPriceStock(int companyId) throws SQLException {
+        ResultSet resultSet = executeTwoIntSelect(companyId, companyId, "select company_name, date, euro_price\n" +
+                "from company c\n" +
+                "left join company_pricedate d\n" +
+                "on c.id = d.company_id\n" +
+                "left join pricedate p\n" +
+                "on d.pricedate_id = p.id\n" +
+                "where c.id = ? and p.euro_price= (\n" +
+                "select max(euro_price)\n" +
+                "from company c\n" +
+                "left join company_pricedate d\n" +
+                "on c.id = d.company_id\n" +
+                "left join pricedate p\n" +
+                "on d.pricedate_id = p.id\n" +
+                "where c.id = ?);");
+        resultSet.next();
+        return resultSet;
+    }
+    public ResultSet getMinPriceStock(int companyId) throws SQLException {
+        ResultSet resultSet = executeTwoIntSelect(companyId, companyId, "select company_name, date, euro_price\n" +
+                "from company c\n" +
+                "left join company_pricedate d\n" +
+                "on c.id = d.company_id\n" +
+                "left join pricedate p\n" +
+                "on d.pricedate_id = p.id\n" +
+                "where c.id = ? and p.euro_price= (\n" +
+                "select min(euro_price)\n" +
+                "from company c\n" +
+                "left join company_pricedate d\n" +
+                "on c.id = d.company_id\n" +
+                "left join pricedate p\n" +
+                "on d.pricedate_id = p.id\n" +
+                "where c.id = ?);");
+        resultSet.next();
+        return resultSet;
+    }
 }
 
 

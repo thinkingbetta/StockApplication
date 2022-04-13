@@ -15,6 +15,8 @@ import java.util.Scanner;
 
 public class StockApp {
 
+    //TODO https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html
+
     private void starter() {
 
         System.out.println("Welcome to StockApp!");
@@ -39,7 +41,10 @@ public class StockApp {
         Command deleteCommand = new DeleteCommand(scanner, dbOperations);
         Command searchCommand = new SearchCommand(scanner, dbOperations);
         Command showCommand = new ShowCommmand(scanner,dbOperations);
-        AddCommand addCommand = new AddCommand(scanner, dbOperations);
+        Command addCommand = new AddCommand(scanner, dbOperations);
+        Command maxCommand = new MaxCommand(scanner,dbOperations);
+        Command minCommand = new MinCommand(scanner,dbOperations);
+        Command gapCommand = new GapCommand(scanner, dbOperations);
 
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(exit);
@@ -48,6 +53,9 @@ public class StockApp {
         commands.add(searchCommand);
         commands.add(showCommand);
         commands.add(addCommand);
+        commands.add(maxCommand);
+        commands.add(minCommand);
+        commands.add(gapCommand);
 
 
 

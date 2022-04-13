@@ -41,6 +41,7 @@ public class AddCommand extends Command {
                                 "FROM company_industry b\n" +
                                 "left join industry i on i.id = b.industry_id \n" +
                                 "WHERE stock_id = ?");
+                resultSet.next();
                 industryName = resultSet.getString(2);
 
               /*  //Is this code necessary?
@@ -69,10 +70,11 @@ public class AddCommand extends Command {
                 BigDecimal price = new BigDecimal(scanner.nextLine());
 
                 Stock stock = new Stock(companyName, price, date, industryName);
-                System.out.println(stock + "\nIs everything correct?");
-                Boolean input = Boolean.valueOf(scanner.nextLine());
+                System.out.println("==============ID:" + companyId + "==============\n" + stock +
+                        "\nIs everything correct?[true to continue or press anything to cancel]");
 
-                if (input.equals(true)) {
+                Boolean isCorrect = Boolean.valueOf(scanner.nextLine());
+                if (isCorrect) {
                     this.dbOperations.importStockInDB(stock);
                     System.out.println("New price and date for stock " + companyName + " added!");
                 } else {

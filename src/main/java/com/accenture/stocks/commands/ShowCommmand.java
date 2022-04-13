@@ -33,7 +33,7 @@ public class ShowCommmand extends Command{
 
 
                 Stock stock = new Stock(resultSet.getString(2),resultSet.getBigDecimal(3),
-                        fromDBFormatter.fromDateSQLtoLocalDate(resultSet),resultSet.getString(5));
+                        fromDBFormatter.fromDateSQLtoLocalDate(resultSet,4),resultSet.getString(5));
 
                 System.out.println( "==============ID:" + companyId + "==============\n" + stock );
                 count ++;

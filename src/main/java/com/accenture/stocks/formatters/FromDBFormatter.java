@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 public class FromDBFormatter {
 
-    public LocalDate fromDateSQLtoLocalDate(ResultSet resultSet) throws SQLException {
-        Date sqlDate = resultSet.getDate(4);
+    public LocalDate fromDateSQLtoLocalDate(ResultSet resultSet, int columnIndex) throws SQLException {
+        Date sqlDate = resultSet.getDate(columnIndex);
         LocalDate date = sqlDate.toLocalDate();
         return date;
     }
