@@ -59,6 +59,7 @@ public class ImportCommand extends Command {
                 count++;
                 line = br.readLine();
             }
+            //TODO fare la print non delle linee che sono importate nel database, ma dalla count delle company
             System.out.println(count + " stocks successfully imported into database");
         } catch (FileNotFoundException fileNotFoundException) {
             System.out.println("Typo in the file name or check if file exists in data/ folder");

@@ -10,7 +10,6 @@ import java.util.Scanner;
 public class DeleteCommand extends Command {
     private final String name = "delete";
     private final Boolean value = false;
-    private final Boolean deleteValue = true;
     private final String[] tables = {"company_pricedate", "company_industry", "industry", "company", "pricedate"};
     private Scanner scanner;
     private DBOperations dbOperations;
@@ -22,10 +21,10 @@ public class DeleteCommand extends Command {
 
     @Override
     public boolean execute() {
-        System.out.println("Do you want to delete all data from database? [true or false]");
-        Boolean input = Boolean.valueOf(new ScannerFormatter(this.scanner).getFormattedString());
+        System.out.println("Do you want to delete all data from database? [true to delete or press anything to NOT delete]");
+        Boolean deleteIsWhatIWant = Boolean.valueOf(new ScannerFormatter(this.scanner).getFormattedString());
         //if the user insert true, then every table will be deleted and the autoincrement will be set to zero.
-        if (input.equals(deleteValue)) {
+        if (deleteIsWhatIWant) {
             for (String t : tables) {
                 try {
                     dbOperations.deleteDataFromTable(t);

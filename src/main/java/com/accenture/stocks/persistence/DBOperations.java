@@ -54,12 +54,12 @@ public class DBOperations {
         preparedStatement.setInt(2, int2);
         preparedStatement.executeUpdate();
     }
-
+    //TODO fare bene il prepared statmente con ?
     public void deleteDataFromTable(String tableName) throws SQLException {
         PreparedStatement preparedStatementDeleteFromCompany = this.connection.prepareStatement("delete from " + tableName);
         preparedStatementDeleteFromCompany.executeUpdate();
     }
-
+    //TODO fare bene il prepared statmente con ?
     public void autoincrementToZero(String tableName) throws SQLException {
         PreparedStatement preparedStatementSetAutoincrementToZero = this.connection.prepareStatement("ALTER TABLE " + tableName + " AUTO_INCREMENT=0");
         preparedStatementSetAutoincrementToZero.executeUpdate();
@@ -105,7 +105,7 @@ public class DBOperations {
 
         return generatedKeyPriceDate;
     }
-
+    //TODO fare bene il prepared statmente con ?
     public ResultSet executeSelectLikeStartsWith(String tableName, String columnName, String input) throws SQLException {
 
         PreparedStatement preparedStatementLike = this.connection.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + " LIKE ? ESCAPE '['");
@@ -181,6 +181,32 @@ public class DBOperations {
                 "where c.id = ?);");
         resultSet.next();
         return resultSet;
+    }
+    /*private ResultSet executeTwoIntSelect(int field1, int field2, String query) throws SQLException {
+        PreparedStatement id = this.connection.prepareStatement(query);
+        id.setInt(1,field1);
+        id.setInt(2,field2);
+        ResultSet resultSet= id.executeQuery();
+        return resultSet;
+    }*/
+public ResultSet selectCountFromTableIndustry() throws SQLException{
+   Statement stmt = this.connection.createStatement();
+   ResultSet rs = stmt.executeQuery("select count(industry_name) as num from industry");
+    return rs;
+}
+
+    public ResultSet selectCountCompaniesFromIndustryTable () throws SQLException{
+        PreparedStatement prepStatCountCompanies = this.connection.prepareStatement("SELECT  i.industry_name, " +
+                "COUNT(c.company_name)\n" +
+                "FROM company c\n" +
+                "left join company_industry b  \n" +
+                "on c.id = b.stock_id\n" +
+                "left join industry i\n" +
+                "on i.id = b.industry_id\n" +
+                "group by industry_name;");
+        ResultSet resultSet = prepStatCountCompanies.executeQuery();
+       return resultSet;
+
     }
 }
 

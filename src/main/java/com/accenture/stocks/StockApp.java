@@ -45,6 +45,7 @@ public class StockApp {
         Command maxCommand = new MaxCommand(scanner,dbOperations);
         Command minCommand = new MinCommand(scanner,dbOperations);
         Command gapCommand = new GapCommand(scanner, dbOperations);
+        Command industriesCommand = new IndustriesCommand(scanner,dbOperations);
 
         ArrayList<Command> commands = new ArrayList<>();
         commands.add(exit);
@@ -56,6 +57,7 @@ public class StockApp {
         commands.add(maxCommand);
         commands.add(minCommand);
         commands.add(gapCommand);
+        commands.add(industriesCommand);
 
 
 

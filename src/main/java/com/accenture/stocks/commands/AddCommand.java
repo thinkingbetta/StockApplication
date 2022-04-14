@@ -1,6 +1,7 @@
 package com.accenture.stocks.commands;
 
 import com.accenture.stocks.entities.Stock;
+import com.accenture.stocks.formatters.ScannerFormatter;
 import com.accenture.stocks.persistence.DBOperations;
 
 import java.math.BigDecimal;
@@ -73,7 +74,7 @@ public class AddCommand extends Command {
                 System.out.println("==============ID:" + companyId + "==============\n" + stock +
                         "\nIs everything correct?[true to continue or press anything to cancel]");
 
-                Boolean isCorrect = Boolean.valueOf(scanner.nextLine());
+                Boolean isCorrect = Boolean.valueOf(new ScannerFormatter(this.scanner).getFormattedString());
                 if (isCorrect) {
                     this.dbOperations.importStockInDB(stock);
                     System.out.println("New price and date for stock " + companyName + " added!");
