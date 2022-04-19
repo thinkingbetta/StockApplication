@@ -12,11 +12,11 @@ public class FromCSVFormatter {
     }
 
     public LocalDate getFormattedLocalDate(String metadata) {
-        String date = metadata.replace(".", "-");
+        String date = metadata.replace(".", "");
         String day = date.substring(0, 2);
-        String month = date.substring(2, 6);
-        String year = date.substring(6, 8);
-        LocalDate localDate = LocalDate.parse("20" + year + month + day);
+        String month = date.substring(2, 4);
+        String year = date.substring(4, 8);
+        LocalDate localDate = LocalDate.parse(year + "-" + month + "-"  + day);
         return localDate;
     }
 

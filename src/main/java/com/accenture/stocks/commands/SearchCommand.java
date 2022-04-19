@@ -28,7 +28,7 @@ public class SearchCommand extends Command {
         String input = new ScannerFormatter(scanner).getFormattedSqlLikeString();
 
         try {
-            ResultSet resultSet = this.dbOperations.executeSelectLikeStartsWith(tableName, columnName, input);
+            ResultSet resultSet = this.dbOperations.executeSelectLikeStartsWith(input);
             int count = 0;
             Boolean hasNext = resultSet.next();
             while (hasNext){

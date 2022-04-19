@@ -37,4 +37,5 @@ public class  Stock {
     public String toString(){
         return "Stock name: " + getCompanyName() +"\nPrice: " + getPrice() +" €\nDate: "+ getDate() +"\nIndustry: "+ getIndustryName() + "\n==================================";
     }
+
 }

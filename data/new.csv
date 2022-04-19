@@ -1,4 +1,4 @@
-﻿stockname;price;price_date;industry
+stockname;price;price_date;industry
 Digi International Inc.;€ 247,23;20.09.2020;Computer Communications Equipment
 Shoe Carnival, Inc.;€ 112,30;04.01.2021;Clothing/Shoe/Accessory Stores
 InVivo Therapeutics Holdings Corp.;€ 332,94;01.10.2020;Medical/Dental Instruments
@@ -999,3 +999,4 @@ Customers Bancorp, Inc;€ 111,62;09.04.2021;n/a
 Old Line Bancshares, Inc.;€ 87,40;21.10.2020;Major Banks
 Entertainment Gaming Asia Incorporated;€ 202,26;09.10.2020;Miscellaneous manufacturing industries
 Avery Dennison Corporation;€ 520,10;28.08.2020;Containers/Packaging
+InVivo Therapeutics Holdings Corp.;€ 555,67;19.04.2022;Medical/Dental Instruments
