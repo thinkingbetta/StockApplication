@@ -1,0 +1,40 @@
+CREATE TABLE `company` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `company_name` varchar(200) DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `industry` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `industry_name` varchar(200) DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `company_industry` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `stock_id` int DEFAULT NULL,
+   `industry_id` int DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   KEY `company_id_idx` (`stock_id`),
+   KEY `industry_id_idx` (`industry_id`),
+   CONSTRAINT `industry_id` FOREIGN KEY (`industry_id`) REFERENCES `industry` (`id`),
+   CONSTRAINT `stock_id` FOREIGN KEY (`stock_id`) REFERENCES `company` (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `pricedate` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `euro_price` decimal(15,2) DEFAULT NULL,
+   `date` date DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `company_pricedate` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `company_id` int DEFAULT NULL,
+   `pricedate_id` int DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   KEY `company_id_idx` (`company_id`),
+   KEY `pricedate_idx` (`pricedate_id`),
+   CONSTRAINT `company_id` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`),
+   CONSTRAINT `pricedate` FOREIGN KEY (`pricedate_id`) REFERENCES `pricedate` (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

@@ -3,6 +3,9 @@ package com.accenture.stocks.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * This class is a POJO.
+ */
 public class  Stock {
     private String companyName;
     private BigDecimal price;
@@ -15,8 +18,6 @@ public class  Stock {
         this.date = date;
         this.industryName = industryName;
     }
-
-
 
     public String getCompanyName(){
         return companyName;
@@ -35,7 +36,8 @@ public class  Stock {
     }
 
     public String toString(){
-        return "Stock name: " + getCompanyName() +"\nPrice: " + getPrice() +" €\nDate: "+ getDate() +"\nIndustry: "+ getIndustryName() + "\n==================================";
+        return "Stock name: " + getCompanyName() +"\nPrice: " + getPrice() +" €\nDate: "+ getDate() +"\nIndustry: "
+                + getIndustryName() + "\n==================================";
     }
 
 }

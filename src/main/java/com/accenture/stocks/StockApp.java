@@ -14,12 +14,10 @@ import java.util.Scanner;
 
 public class StockApp {
 
-    //TODO https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html
-
     /**
-     * 
+     * This method connects to the database, creates an ArrayList<> of commands and allows the user to interact with the
+     * application.
      */
-
     private void starter() {
 
         System.out.println("Welcome to StockApp!");
@@ -42,7 +40,7 @@ public class StockApp {
         Command importInDatabaseCommand = new ImportCommand(scanner, dbOperations);
         Command deleteCommand = new DeleteCommand(scanner, dbOperations);
         Command searchCommand = new SearchCommand(scanner, dbOperations);
-        Command showCommand = new ShowCommmand(scanner, dbOperations);
+        Command showCommand = new ShowCommand(scanner, dbOperations);
         Command addCommand = new AddCommand(scanner, dbOperations);
         Command maxCommand = new MaxCommand(scanner, dbOperations);
         Command minCommand = new MinCommand(scanner, dbOperations);
@@ -81,6 +79,11 @@ public class StockApp {
         }
     }
 
+    /**
+     * This method is the entry point of the application.
+     *
+     * @param args String array
+     */
     public static void main(String[] args) {
         new StockApp().starter();
 

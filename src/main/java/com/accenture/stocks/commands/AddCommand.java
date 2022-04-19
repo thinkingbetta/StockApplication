@@ -11,10 +11,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+/**
+ * This class allows to add a new price for a specific time for a specific stock.
+ */
 public class AddCommand extends Command {
-    private final Boolean value = false;
-    public final String name = "add";
-    // public final String unknownIndustry = "n/a";
+    private final Boolean VALUE = false;
+    public final String NAME = "add";
     private Scanner scanner;
     private DBOperations dbOperations;
 
@@ -23,19 +25,23 @@ public class AddCommand extends Command {
         this.dbOperations = dbOperations;
     }
 
+    /**
+     * This method reads the company_id, if the id corresponds to a company inserted in the database,
+     * returns company name and the industry assigned to the company. Asks for new price and date, creates a stock
+     * and after the confirmation of the user, imports the stock into the database.
+     *
+     * @return boolean
+     */
     @Override
     public boolean execute() {
         System.out.println("Enter ID company:");
-        int companyId = Integer.parseInt(scanner.nextLine());
-
-        //check if the id corresponds to a company inserted in the database and return company name
         try {
+            int companyId = Integer.parseInt(scanner.nextLine());
             ResultSet resultSetCompanyName = this.dbOperations.executeOneIntSelect(companyId,
                     "SELECT company_name FROM company WHERE id = ?");
             Boolean hasNextName = resultSetCompanyName.next();
             if (hasNextName) {
                 String companyName = resultSetCompanyName.getString(1);
-                //if the company exists, check the industry assigned to the company and return the name of industry
                 String industryName;
                 ResultSet resultSet = this.dbOperations.executeOneIntSelect(companyId,
                         "SELECT b.id , i.industry_name \n" +
@@ -44,36 +50,13 @@ public class AddCommand extends Command {
                                 "WHERE stock_id = ?");
                 resultSet.next();
                 industryName = resultSet.getString(2);
-
-              /*  //Is this code necessary?
-                ResultSet resultSet = this.dbOperations.executeOneIntSelect(companyId,
-                        "SELECT b.id , i.industry_name \n" +
-                                "FROM company_industry b\n" +
-                                "left join industry i on i.id = b.industry_id \n" +
-                                "WHERE stock_id = ?");
-                Boolean hasNextIndustry = resultSet.next();
-                //if the industry is assigned, return the industry name
-                if (hasNextIndustry) {
-                    industryName = resultSet.getString(2);
-                }
-                //if the industry is not assigned? is it a possible that this happens?
-                else {
-                    ResultSet resultSetUnknownIndustry = this.dbOperations.executeOneStringSelect(unknownIndustry,
-                            "SELECT id, name FROM industry WHERE industry_name = ?");
-                    int industryId = resultSetUnknownIndustry.getInt(1);
-                    industryName = resultSetUnknownIndustry.getString(2);
-                }*/
-
                 System.out.println("Enter date[YYYY-MM-DD]:");
                 LocalDate date = LocalDate.parse(scanner.nextLine());
-
                 System.out.println("Enter price[use '.' for two decimal points]:");
                 BigDecimal price = new BigDecimal(scanner.nextLine());
-
                 Stock stock = new Stock(companyName, price, date, industryName);
                 System.out.println("==============ID:" + companyId + "==============\n" + stock +
                         "\nIs everything correct?[true to continue or press anything to cancel]");
-
                 Boolean isCorrect = Boolean.valueOf(new ScannerFormatter(this.scanner).getFormattedString());
                 if (isCorrect) {
                     this.dbOperations.importStockInDB(stock);
@@ -89,13 +72,13 @@ public class AddCommand extends Command {
         } catch (DateTimeParseException w) {
             System.out.println("Wrong date format!");
         } catch (NumberFormatException e) {
-            System.out.println("Wrong price format!");
+            System.out.println("Wrong number format!");
         }
-        return value;
+        return VALUE;
     }
 
     @Override
     public String getName() {
-        return name;
+        return NAME;
     }
 }
