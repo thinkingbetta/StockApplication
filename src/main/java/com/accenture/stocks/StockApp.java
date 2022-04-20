@@ -1,11 +1,9 @@
 package com.accenture.stocks;
 
-
 import com.accenture.stocks.commands.*;
 import com.accenture.stocks.formatters.ScannerFormatter;
 import com.accenture.stocks.persistence.DatabaseConnector;
 import com.accenture.stocks.persistence.DBOperations;
-
 
 import java.sql.Connection;
 import java.sql.SQLException;

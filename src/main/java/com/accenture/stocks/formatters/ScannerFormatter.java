@@ -23,8 +23,7 @@ public class ScannerFormatter {
     }
 
     /**
-     * This method escapes characters that can be used by SQL Like query. It is possible to search for all chars,
-     * but "[".
+     * This method escapes characters that can be used by SQL Like query. It is possible to search for all chars.
      *
      * @return string
      */

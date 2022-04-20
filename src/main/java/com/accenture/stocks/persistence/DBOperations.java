@@ -2,7 +2,9 @@ package com.accenture.stocks.persistence;
 
 import com.accenture.stocks.entities.Stock;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 
 /**
  * This class contains all the methods to operate and interact with the SQLDatabase.
@@ -40,6 +42,23 @@ public class DBOperations {
     public ResultSet executeOneStringSelect(String field, String query) throws SQLException {
         PreparedStatement id = this.connection.prepareStatement(query);
         id.setString(1, field);
+        ResultSet resultSet = id.executeQuery();
+        return resultSet;
+    }
+
+    /**
+     * This method executes a SELECT query where two strings are set as parameters and produces a result set.
+     *
+     * @param field1 a String set as parameter
+     * @param field2 a String set as parameter
+     * @param query a SELECT query that produces a result set
+     * @return result set
+     * @throws SQLException
+     */
+    public ResultSet executeTwoStringSelect(String field1, String field2, String query) throws SQLException {
+        PreparedStatement id = this.connection.prepareStatement(query);
+        id.setString(1, field1);
+        id.setString(2, field2);
         ResultSet resultSet = id.executeQuery();
         return resultSet;
     }
@@ -205,22 +224,32 @@ public class DBOperations {
             return generatedKeyIndustry;
         }
     }
-
+ //TODO prove again if it is already in DB
     /**
-     * Given a stock, this method inserts the price and date in the table pricedate and returns the generated key.
+     * Given a stock, this method checks if price and date are already inserted in the pricedate table. If they are
+     * present, it returns the already existing key, otherwise it inserts the new price and date in the table and
+     * returns the generated key.
      *
      * @param stock instance of Stock
      * @return key of pricedate inserted in the table
      * @throws SQLException
      */
     public int insertPriceDateInPriceDateTable(Stock stock) throws SQLException {
-        PreparedStatement preparedStatementPriceDate = this.connection.prepareStatement("INSERT INTO " +
-                "pricedate (euro_price, date)  VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
-        preparedStatementPriceDate.setBigDecimal(1, stock.getPrice());
-        preparedStatementPriceDate.setDate(2, Date.valueOf(stock.getDate()));
-        preparedStatementPriceDate.executeUpdate();
-        int generatedKeyPriceDate = getGeneratedKey(preparedStatementPriceDate);
-        return generatedKeyPriceDate;
+        ResultSet priceDateResult = executeTwoStringSelect(stock.getPrice().toString(), stock.getDate().toString(),
+                "SELECT id FROM pricedate WHERE euro_price = ? and date = ? ");
+        boolean hasNext = priceDateResult.next();
+        if (hasNext) {
+            int alreadyExistingKeyPriceDate = priceDateResult.getInt(1);
+            return alreadyExistingKeyPriceDate;
+        } else {
+            PreparedStatement preparedStatementPriceDate = this.connection.prepareStatement("INSERT INTO " +
+                    "pricedate (euro_price, date)  VALUES(?,?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatementPriceDate.setBigDecimal(1, stock.getPrice());
+            preparedStatementPriceDate.setDate(2, Date.valueOf(stock.getDate()));
+            preparedStatementPriceDate.executeUpdate();
+            int generatedKeyPriceDate = getGeneratedKey(preparedStatementPriceDate);
+            return generatedKeyPriceDate;
+        }
     }
 
     /**
@@ -233,12 +262,17 @@ public class DBOperations {
         int companyId = insertCompanyInCompanyTable(stock);
         int priceDateId = insertPriceDateInPriceDateTable(stock);
         int industryId = insertIndustryInIndustryTableFromStock(stock);
-        executeTwoIntInsert(companyId, priceDateId,
-                "INSERT INTO company_pricedate (company_id,pricedate_id) VALUES (?,?)");
+        ResultSet companyPriceDateIdResult = executeTwoIntSelect(companyId, priceDateId,
+                "SELECT id FROM company_pricedate WHERE company_id = ? AND pricedate_id = ?");
+        boolean hasNext1 = companyPriceDateIdResult.next();
+        if (!hasNext1) {
+            executeTwoIntInsert(companyId, priceDateId,
+                    "INSERT INTO company_pricedate (company_id,pricedate_id) VALUES (?,?)");
+        }
         ResultSet companyIndustryIdResult = executeTwoIntSelect(companyId, industryId,
                 "SELECT id FROM company_industry WHERE stock_id = ? AND industry_id = ?");
-        boolean hasNext = companyIndustryIdResult.next();
-        if (!hasNext) {
+        boolean hasNext2 = companyIndustryIdResult.next();
+        if (!hasNext2) {
             executeTwoIntInsert(companyId, industryId,
                     "INSERT INTO company_industry (stock_id, industry_id) VALUES (?,?)");
         }
@@ -246,7 +280,8 @@ public class DBOperations {
 
     /**
      * Given the starting letters of a company name, this method searches for a company name. The ESCAPE is used to
-     * ignore symbols that implement wildcards(i.e. % and _), but also may be part of a company name.
+     * treat the symbols that implement wildcards(i.e. % and _), but also may be part of a company name, as regular
+     * characters.
      * A wildcard character is used to substitute one or more characters in a string.
      *
      * @param input String inserted by user
