@@ -1,5 +1,5 @@
 # StockApplication
-This is Stock Application created by Elisabetta Spagnuolo for the Assignment Week of the Extended Java JumpStart. 
+This is Stock Application created by Elisabetta Spagnuolo for the Assignment Week of Java JumpStart. 
 
 ## Info about creation of tables in database
 The queries to create the tables in the database are in the folder `resources/` in the file ["DBTables"](https://github.com/thinkingbetta/StockApplication/blob/main/resources/DBTables).
